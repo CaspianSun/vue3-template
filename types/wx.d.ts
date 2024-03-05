@@ -141,7 +141,7 @@ declare module wx {
    * 用户取消时："xxx:cancel"，其中xxx为调用的接口名
    * 调用失败时：其值为具体错误信息
    */
-  type CommonApiOptionsCallbackParams<T extends object = {}> = {
+  type CommonApiOptionsCallbackParams<T extends object = Record<string, any>> = {
     [key: string]: any
     errMsg: string
   } & T
@@ -150,7 +150,7 @@ declare module wx {
    * T: success回调函数的参数
    * D: complete回调函数的参数
    */
-  interface CommonApiOptions<T extends object = {}, D extends object = {}> {
+  interface CommonApiOptions<T extends object = Record<string, any>, D extends object = Record<string, any>> {
     /**
      * 接口调用成功时执行的回调函数。
      */
@@ -710,7 +710,7 @@ declare module wx {
   /**
    * 小程序路由跳转参数
    */
-  interface MPRouterOptions<T extends object = {}> extends CommonApiOptions<T> {
+  interface MPRouterOptions<T extends object = Record<string, any>> extends CommonApiOptions<T> {
     /**
      * 需要跳转的应用内非 tabBar 的页面的路径 (代码包路径), 路径后可以带参数。
      * 参数与路径之间使用 ? 分隔，参数键与参数值用 = 相连，不同参数用 & 分隔；
@@ -1110,7 +1110,7 @@ declare module wx {
    */
   function onVoiceRecordEnd(
     options: CommonApiOptions<
-      {},
+      Record<string, any>,
       {
         /**
          * 本地资源ID
@@ -1322,9 +1322,7 @@ declare module wx {
    * [官方文档](https://developers.weixin.qq.com/doc/offiaccount/Shake_Nearby/Active_from_Html5/HTML_5_Page_Get_Device_Info.html#%E7%9B%91%E5%90%AC%E5%91%A8%E8%BE%B9ibeacon%E8%AE%BE%E5%A4%87%E6%8E%A5%E5%8F%A3)
    * @param options complete
    */
-  function onSearchBeacons(
-    options: CommonApiOptions<{}, { onSearchBeacons: { beacons: Beacons[] } }>,
-  ): void
+  function onSearchBeacons(options: CommonApiOptions<Record<string, any>, { onSearchBeacons: { beacons: Beacons[] } }>): void
   /* --------------------------------- 摇一摇周边 End --------------------------------- */
 
   /* --------------------------------- 界面操作 Start --------------------------------- */
@@ -1405,9 +1403,7 @@ declare module wx {
    * ```
    * @param options productId,viewType
    */
-  function openProductSpecificView(
-    options: OpenProductSpecificViewOptions,
-  ): void
+  function openProductSpecificView(options: OpenProductSpecificViewOptions): void
   /* --------------------------------- 微信小店 End --------------------------------- */
 
   /* --------------------------------- 微信卡券 Start --------------------------------- */
@@ -1533,7 +1529,7 @@ interface Window {
     call: () => void
     invoke: (e: any, t: any, n: any) => void
     log: (e: any) => void
-    on: (e: any, t: Function) => void
+    on: (e: any, t: (...args: any[]) => void) => void
   }
   /**
    * 小程序web-view中才有该字段

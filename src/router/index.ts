@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router"
 import type { RouterOptions } from "vue-router"
 
-const publicRoutes = [
+const routes = [
   {
     path: "/",
     redirect: "/decorators",
@@ -20,12 +20,12 @@ const publicRoutes = [
 
 const router = createRouter(<RouterOptions>{
   history: createWebHashHistory(),
-  routes: [...publicRoutes],
+  routes: [...routes],
 })
 
-router.beforeEach((to, from, next) => {
-  document.title = to.meta.title as string
+router.beforeEach((to, form, next) => {
   next()
 })
+router.afterEach(() => {})
 
 export default router

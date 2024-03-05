@@ -1,17 +1,18 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosStatic } from "axios"
 
+const baseURL = import.meta.env.VITE_API_URL
+const timeout = 20000
+const successStatus = [200, 0, "200", "0"]
 const statusName = "status"
 const messageName = "message"
-const successCode = [200, 0, "200", "0"]
 const contentType = "application/json"
 
 interface MAxiosInstance extends AxiosInstance {
-  <T = unknown, R = T extends BaseResponse ? T : T extends unknown ? BaseResponseWithData<any> : BaseResponseWithData<T>, D = any>(
+  <T = unknown, R = T extends BaseResponse ? T : unknown extends T ? BaseResponseWithData<any> : BaseResponseWithData<T>, D = any>(
     config: AxiosRequestConfig<D>,
   ): Promise<R>
   <T = unknown, R = T, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>
 }
-
 class MAxios {
   readonly axios: MAxiosInstance
   constructor(axios: AxiosStatic, config: AxiosRequestConfig) {
@@ -47,8 +48,8 @@ class MAxios {
 }
 
 const service = new MAxios(axios, {
-  baseURL: import.meta.env.VITE_API_URL,
-  timeout: 20000,
+  baseURL,
+  timeout,
   headers: {
     "Content-Type": contentType,
   },
@@ -64,10 +65,10 @@ service.axios.interceptors.request.use(
 )
 service.axios.interceptors.response.use(
   (response) => {
-    const { data, status } = response
-    let code = data && data[statusName] ? data[statusName] : status
-    if (successCode.includes(code)) code = 200
-    switch (code) {
+    const { data, status: _status } = response
+    let status = data && data[statusName] ? data[statusName] : _status
+    if (successStatus.includes(status)) status = 200
+    switch (status) {
       case 200:
         return Promise.resolve(data)
       default:
@@ -75,7 +76,14 @@ service.axios.interceptors.response.use(
     }
   },
   (error) => {
-    return Promise.reject(error)
+    const { response } = error
+    switch (response?.status) {
+      case 400:
+      case 401:
+        return Promise.resolve(response.data)
+      default:
+        return Promise.reject(error)
+    }
   },
 )
 
