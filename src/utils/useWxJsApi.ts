@@ -7,6 +7,7 @@
 
 declare global {
   interface Window {
+    openid?: string
     wxAppId?: string
     wxTimestamp?: string
     wxNonceStr?: string

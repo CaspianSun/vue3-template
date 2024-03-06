@@ -47,7 +47,7 @@ class MAxios {
   }
 }
 
-const service = new MAxios(axios, {
+export const service = new MAxios(axios, {
   baseURL,
   timeout,
   headers: {
@@ -57,6 +57,7 @@ const service = new MAxios(axios, {
 
 service.axios.interceptors.request.use(
   (config) => {
+    config.headers["ActId"] = import.meta.env.VITE_ACT_ID
     return config
   },
   (error) => {

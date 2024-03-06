@@ -1,5 +1,10 @@
 {
-  "origins": [],
+  "origins": [
+    {
+      "name": "h5",
+      "originUrl": "https://h5-test.qssite.cn/doc/h5-json"
+    }
+  ],
   "templatePath": "./pontTemplate",
   "fetchMethodPath": "./fetchMethodPath",
   "outDir": "./services",
