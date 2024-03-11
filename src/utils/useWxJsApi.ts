@@ -7,6 +7,7 @@
 
 declare global {
   interface Window {
+    openid?: string
     wxAppId?: string
     wxTimestamp?: string
     wxNonceStr?: string
@@ -16,11 +17,12 @@ declare global {
 
 export class WxJsApi {
   private debug: boolean = false
-  private jsApiList: wx.JsApi[] = []
+  private jsApiList: wx.JsApi[] = ["updateAppMessageShareData", "updateTimelineShareData"]
   private appId: string
   private timestamp: string
   private nonceStr: string
   private signature: string
+  readonly wx = window.wx
 
   constructor(config?: {
     debug?: boolean
@@ -29,17 +31,19 @@ export class WxJsApi {
     timestamp?: string
     nonceStr?: string
     signature?: string
+    init?: boolean
   }) {
     config?.debug && (this.debug = true)
-    config?.jsApiList && (this.jsApiList = config.jsApiList)
+    config?.jsApiList && this.jsApiList.concat(config.jsApiList)
     this.appId = window.wxAppId || config?.appId || ""
     this.timestamp = window.wxTimestamp || config?.timestamp || ""
     this.nonceStr = window.wxNonceStr || config?.nonceStr || ""
     this.signature = window.wxSignature || config?.signature || ""
+    config?.init && this.init()
   }
   public init() {
     return new Promise((resolve, reject) => {
-      window.wx.config({
+      wx.config({
         debug: this.debug,
         appId: this.appId,
         timestamp: this.timestamp,
@@ -47,8 +51,8 @@ export class WxJsApi {
         signature: this.signature,
         jsApiList: this.jsApiList,
       })
-      window.wx.ready(() => {
-        window.wx.checkJsApi({
+      wx.ready(() => {
+        wx.checkJsApi({
           jsApiList: this.jsApiList,
           success: (res: any) => {
             resolve(res)
@@ -65,8 +69,8 @@ export class WxJsApi {
     updateAppMessageShareData?: wx.AppMessageShareData
     updateTimelineShareData?: wx.TimelineShareData
   }): void {
-    data?.updateAppMessageShareData && window.wx.updateAppMessageShareData(data.updateAppMessageShareData)
-    data?.updateTimelineShareData && window.wx.updateTimelineShareData(data.updateTimelineShareData)
+    data?.updateAppMessageShareData && wx.updateAppMessageShareData(data.updateAppMessageShareData)
+    data?.updateTimelineShareData && wx.updateTimelineShareData(data.updateTimelineShareData)
   }
 }
 

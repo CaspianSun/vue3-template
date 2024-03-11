@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue"
-import PlayMusic from "@/hook/tools/useAutoPlayMusic"
+import PlayMusic from "@/utils/useAutoPlayMusic"
 const music = new PlayMusic({
   url: "https://qushen-file.oss-cn-beijing.aliyuncs.com/CBC15/5c89d6779fab955439.mp3",
   loadAutoPlay: true,
