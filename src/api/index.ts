@@ -7,7 +7,7 @@ export const getCacheIDApi = (params: { actCode: string }) => {
   })
 }
 
-export function lotteryPointsApi(data: { targetKey: string }) {
+export const lotteryPointsApi = (data: { targetKey: string }) => {
   return service.post({
     url: "/api/h5/v1/lottery/channel/lotteryPoints",
     headers: {
@@ -17,14 +17,14 @@ export function lotteryPointsApi(data: { targetKey: string }) {
   })
 }
 
-export function lotteryPlayApi(data: { targetKey: string }) {
+export const lotteryPlayApi = (data: { targetKey: string }) => {
   return service.post<defs.h5.LotteryRes>({
     url: "/api/h5/v1/lottery/lotteryPlay",
     data,
   })
 }
 
-export function getLotteryLogApi(params: { targetKey: string }) {
+export const getLotteryLogApi = (params: { targetKey: string }) => {
   return service.get<BaseResponseWithArray<defs.h5.PrizeInfo>>({
     url: "/api/h5/v1/lottery/lotteryLog",
     params,

@@ -89,4 +89,3 @@ service.axios.interceptors.response.use(
 )
 
 export default service
-export const axiosInstance = service.axios
