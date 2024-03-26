@@ -22,6 +22,10 @@ export class WxJsApi {
   private timestamp: string
   private nonceStr: string
   private signature: string
+  private shareData?: {
+    updateAppMessageShareData?: wx.AppMessageShareData
+    updateTimelineShareData?: wx.TimelineShareData
+  }
   readonly wx = window.wx
 
   constructor(config?: {
@@ -31,7 +35,10 @@ export class WxJsApi {
     timestamp?: string
     nonceStr?: string
     signature?: string
-    init?: boolean
+    shareData?: {
+      updateAppMessageShareData?: wx.AppMessageShareData
+      updateTimelineShareData?: wx.TimelineShareData
+    }
   }) {
     config?.debug && (this.debug = true)
     config?.jsApiList && this.jsApiList.concat(config.jsApiList)
@@ -39,7 +46,8 @@ export class WxJsApi {
     this.timestamp = window.wxTimestamp || config?.timestamp || ""
     this.nonceStr = window.wxNonceStr || config?.nonceStr || ""
     this.signature = window.wxSignature || config?.signature || ""
-    config?.init && this.init()
+    this.shareData = config?.shareData || void 0
+    this.init()
   }
   public init() {
     return new Promise((resolve, reject) => {
@@ -56,6 +64,10 @@ export class WxJsApi {
           jsApiList: this.jsApiList,
           success: (res: any) => {
             resolve(res)
+            if (this.shareData) {
+              this.shareData.updateAppMessageShareData && wx.updateAppMessageShareData(this.shareData.updateAppMessageShareData)
+              this.shareData.updateTimelineShareData && wx.updateTimelineShareData(this.shareData.updateTimelineShareData)
+            }
           },
           fail: (err: any) => {
             reject(err)
@@ -63,14 +75,6 @@ export class WxJsApi {
         })
       })
     })
-  }
-
-  public setWxShareData(data?: {
-    updateAppMessageShareData?: wx.AppMessageShareData
-    updateTimelineShareData?: wx.TimelineShareData
-  }): void {
-    data?.updateAppMessageShareData && wx.updateAppMessageShareData(data.updateAppMessageShareData)
-    data?.updateTimelineShareData && wx.updateTimelineShareData(data.updateTimelineShareData)
   }
 }
 

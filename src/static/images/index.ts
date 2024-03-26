@@ -1,7 +1,7 @@
 import { images } from "./images"
 import { ImageType } from "./const"
 
-const OSS_URL = import.meta.env.VITE_OSS_URL
+const OSS_URL = `${import.meta.env.VITE_OSS_URL}/test`
 const OSS_URL_END_WITHOUT_SLASH = OSS_URL.endsWith("/") ? OSS_URL.slice(0, -1) : OSS_URL
 
 let isUpdateImageUrls = false
@@ -12,7 +12,7 @@ function updateImageUrls(obj: Record<string, any>, parentKeys: string[] = []) {
     const keyArr = key.split(/(?=[A-Z])/)
     const keyStr = keyArr.join("-").toLowerCase()
     const currentKeys = [...parentKeys]
-    const url = `${OSS_URL_END_WITHOUT_SLASH}/${currentKeys.join("/")}`
+    const url = `${OSS_URL_END_WITHOUT_SLASH}${currentKeys.join("/")}`
     if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
       updateImageUrls(obj[key], [...parentKeys, keyStr])
     } else if (
